@@ -1,0 +1,48 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+//配置全局变量
+buildscript {
+    //ext.kotlin_version = '1.1.2-5'
+    repositories {
+        maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
+    }
+    dependencies {
+        classpath "com.android.tools.build:gradle:$GRADLE_VERSION"
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.6'
+        classpath 'com.github.dcendents:android-maven-gradle-plugin:1.5'
+        //classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        //classpath "org.jetbrains.kotlin:kotlin-android-extensions:$kotlin_version"
+
+        // NOTE: Do not place your application dependencies here; they belong
+        // in the individual module build.gradle files
+    }
+}
+
+allprojects {
+    repositories {
+        maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
+        flatDir {
+            dirs "$rootProject.rootDir/libs","$rootProject.rootDir/libs/aar", "$rootProject.rootDir/libs/lib"
+        }
+    }
+
+    tasks.withType(Javadoc) {
+        options.addStringOption('Xdoclint:none', '-quiet')
+        options.addStringOption('encoding', 'UTF-8')
+    }
+
+    tasks.withType(JavaCompile) {
+        options.encoding = "UTF-8"
+        sourceCompatibility = JavaVersion.VERSION_1_7
+        targetCompatibility = JavaVersion.VERSION_1_7
+    }
+
+    tasks.whenTaskAdded { task ->
+        if (task.name.contains('AndroidTest') || task.name.contains('UnitTest') || task.name.equals('test')) {
+            task.enabled = false
+        }
+    }
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}

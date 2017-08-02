@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="titleBackground">#2B2B2B</color>
+    <color name="windowBackground">#F2F2F2</color>
+    <color name="contentBackground">#FFFFFF</color>
+    <color name="partBackground">#B9BCC0</color>
+    <color name="optionBackground">#646566</color>
+    <color name="itemBackground">#3C3F41</color>
+    <color name="textButton">#edf2f6</color>
+</resources>

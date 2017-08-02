@@ -1,0 +1,80 @@
+//所有的arr统一放在aar目录下
+
+
+android {
+    compileSdkVersion ANDROID_BUILD_SDK_VERSION as int
+    buildToolsVersion ANDROID_BUILD_TOOLS_VERSION
+
+    defaultConfig {
+        minSdkVersion 14
+        targetSdkVersion ANDROID_BUILD_SDK_VERSION
+        versionCode Integer.parseInt(VERSION ?: '10')
+        versionName VERSION_NAME
+    }
+
+    sourceSets {
+        main {
+            manifest.srcFile 'AndroidManifest.xml'
+            java.srcDirs = ['src']
+            resources.srcDirs = ['src']
+            aidl.srcDirs = ['src']
+            renderscript.srcDirs = ['src']
+            res.srcDirs = ['res']
+            assets.srcDirs = ['assets']
+            jniLibs.srcDirs = ['libs']
+        }
+
+        // Move the tests to tests/java, tests/res, etc...
+        instrumentTest.setRoot('tests')
+
+        // Move the build types to build-types/<type>
+        // For instance, build-types/debug/java, build-types/debug/AndroidManifest.xml, ...
+        // This moves them out of them default location under src/<type>/... which would
+        // conflict with src/ being used by the main source set.
+        // Adding new build types or product flavors should be accompanied
+        // by a similar customization.
+        debug.setRoot('build-types/debug')
+        release.setRoot('build-types/release')
+    }
+
+//    sourceSets.release.jniLibs.srcDirs = ['libs']
+//    sourceSets.debug.jniLibs.srcDirs = ['libs']
+    packagingOptions {
+        exclude 'LICENSE.txt'
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/dependencies'
+        exclude 'META-INF/DEPENDENCIES.txt'
+        exclude 'META-INF/dependencies.txt'
+        exclude 'META-INF/LGPL2.1'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/license'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/license.txt'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/notice'
+        exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/notice.txt'
+        exclude 'META-INF/README.txt'
+        exclude 'META-INF/services/javax.annotation.processing.Processor'
+        exclude '!META-INF/MANIFEST.MF'
+        exclude 'META-INF/MANIFEST.MF'
+    }
+    dexOptions {
+        javaMaxHeapSize "4g"
+        //preDexLibraries = false   // android support v4加了两次，暂时注释
+        //incremental = false
+        //jumboMode = false
+    }
+
+    lintOptions {
+        quiet true
+        checkReleaseBuilds false
+        abortOnError false //执行lint检查，有任何的错误或者警告提示，都会终止构建，我们可以将其关掉。
+    }
+
+    aaptOptions {
+        noCompress 'foo', 'bar'
+        ignoreAssetsPattern "!.svn:!.git:!.ds_store:!*.scc:.*:<dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"
+    }
+    //useLibrary 'org.apache.http.legacy'
+}

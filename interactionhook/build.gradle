@@ -1,0 +1,47 @@
+apply plugin: 'com.android.library'
+apply from: "$rootProject.rootDir/base.gradle"
+
+//http://www.2cto.com/kf/201608/532583.html
+ext {
+    bintrayRepo = 'widget'
+    bintrayName = 'interactionhook'
+
+    publishedGroupId = 'com.rexy.android'
+    libraryName = 'interactionhook'
+    artifact = 'interactionhook'
+
+    libraryDescription = 'this library is used to monitor and collect user interaction such as touch gesture,click event,input event ,focus change and so on'
+
+    siteUrl = 'https://github.com/rexyren/InteractionHook'
+    gitUrl = 'https://github.com/rexyren/InteractionHook.git'
+
+    libraryVersion = VERSION_NAME
+
+    developerId = 'rexyren'
+    developerName = 'rexyren'
+    developerEmail = 'renzh2010@gmail.com'
+
+    licenseName = 'MIT'
+    licenseUrl = 'https://opensource.org/licenses/MIT'
+    allLicenses = ["MIT"]
+}
+
+android {
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    provided(name: 'recyclerview-v7-23.4.0', ext: 'aar')
+    provided(name: 'support-v4-23.4.0', ext: 'aar')
+}
+
+File deployConfig = rootProject.file('IGNORE/config/deploy.gradle')
+if (deployConfig.exists()) {
+    apply from: rootProject.file('IGNORE/config/deploy.gradle')
+}
