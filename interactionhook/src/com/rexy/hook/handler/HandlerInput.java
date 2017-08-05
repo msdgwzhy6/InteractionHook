@@ -159,6 +159,7 @@ public class HandlerInput extends HookHandler {
             long lastTime = header.getReferTime();
             while (header != null) {
                 lastTime = analyzeInputResult(lastTime, header.getReferTime(), header.getKeyRecord(), result);
+                result.mText=header.getText();
                 header = header.recycle();
             }
             reportResult(result);
@@ -214,6 +215,11 @@ public class HandlerInput extends HookHandler {
         private long mStartTime;
 
         /**
+         * the latest text of the EditText
+         */
+        private CharSequence mText;
+
+        /**
          * input add char count
          */
         private int mTypeInputCount;
@@ -238,6 +244,14 @@ public class HandlerInput extends HookHandler {
         private ResultInput(View target,long startTime) {
             super(target);
             mStartTime=startTime;
+        }
+
+        /**
+         * get the latest text of the target EditText
+         * @return
+         */
+        public CharSequence getText(){
+            return mText;
         }
 
         public long getStartTime() {
@@ -269,6 +283,7 @@ public class HandlerInput extends HookHandler {
             receiver.append(formatView(getTargetView())).append("{");
             receiver.append("time=").append(formatTime(getTimestamp(), null)).append(',');
             receiver.append("startTime=").append(formatTime(getStartTime(), null)).append(',');
+            receiver.append("text=").append(getText()).append(',');
             receiver.append("input=").append(getInputCount()).append(',');
             receiver.append("delete=").append(getDeleteCount()).append(',');
             receiver.append("speed=").append((int)getInputSpeed(60 * 1000)).append(',');
@@ -280,6 +295,7 @@ public class HandlerInput extends HookHandler {
             receiver.put("view", getTargetView());
             receiver.put("time", getTimestamp());
             receiver.put("startTime", getStartTime());
+            receiver.put("text",getText());
             receiver.put("inputCount", getInputCount());
             receiver.put("deleteCount", getDeleteCount());
             receiver.put("speed", getInputSpeed(60 * 1000));

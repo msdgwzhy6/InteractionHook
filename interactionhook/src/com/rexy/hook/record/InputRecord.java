@@ -102,6 +102,7 @@ public class InputRecord {
         InputRecord record = mNext;
         mNext = null;
         mTarget = null;
+        mText=null;
         mReferTime = 0;
         mInputChange.clear();
         sTouchRecordPool.release(this);

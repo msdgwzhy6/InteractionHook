@@ -1,36 +1,13 @@
 package com.rexy.example.extend;
 
-import android.annotation.SuppressLint;
-import android.annotation.TargetApi;
 import android.app.Activity;
-import android.content.Context;
-import android.content.ContextWrapper;
-import android.graphics.Bitmap;
-import android.graphics.Bitmap.Config;
-import android.graphics.Canvas;
-import android.graphics.Rect;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.view.ViewCompat;
-import android.view.Gravity;
-import android.view.MotionEvent;
+import android.util.SparseArray;
 import android.view.View;
-import android.view.View.MeasureSpec;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
-import android.view.ViewTreeObserver.OnGlobalLayoutListener;
-import android.view.inputmethod.InputMethodManager;
-import android.webkit.WebView;
-import android.widget.FrameLayout.LayoutParams;
-import android.widget.LinearLayout;
-import android.widget.ListAdapter;
-import android.widget.ListView;
-import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
+
+import com.rexy.widgets.layout.PageScrollView;
 
 public class ViewUtils {
 
@@ -56,14 +33,17 @@ public class ViewUtils {
         return null;
     }
 
-    @SuppressLint("NewApi")
-    public static void setBackground(View v, Drawable d) {
-        int sdk = Build.VERSION.SDK_INT;
-        if (sdk < Build.VERSION_CODES.JELLY_BEAN) {
-            v.setBackgroundDrawable(d);
-        } else {
-            v.setBackground(d);
-        }
+    public static TextView installIndicator(Activity activity) {
+        ViewGroup decorView = (ViewGroup) activity.getWindow().getDecorView();
+        PageScrollView scrollView=new PageScrollView(activity);
+        scrollView.setOrientation(PageScrollView.VERTICAL);
+        TextView textView=new TextView(activity);
+        textView.setBackgroundColor(0x22000000);
+        textView.setTextColor(0x77ff0000);
+        scrollView.addView(textView,-1,-2);
+        scrollView.setMaxHeight(activity.getResources().getDisplayMetrics().heightPixels/3);
+        decorView.addView(scrollView);
+        return textView;
     }
 
 }

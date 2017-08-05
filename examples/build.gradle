@@ -6,5 +6,6 @@ dependencies {
     compile(name: 'support-v4-23.4.0', ext: 'aar')
     compile(name: 'appcompat-v7-23.4.0', ext: 'aar')
     compile(name: 'recyclerview-v7-23.4.0', ext: 'aar')
+    compile 'com.rexy.android:widgetlayout:1.0.0'
     compile project(':interactionhook')
 }
