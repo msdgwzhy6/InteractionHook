@@ -15,12 +15,13 @@ import java.util.List;
  */
 
 public class MyApplication extends Application implements IHandleListener {
-
+    private  static MyApplication mApp;
     List<IHandleListener> mListener=new ArrayList();
 
     @Override
     public void onCreate() {
         super.onCreate();
+        mApp=this;
         InteractionHook.setGlobalHandleListener(this);
     }
 
@@ -50,5 +51,9 @@ public class MyApplication extends Application implements IHandleListener {
 
     public void unregisterHandleListener(IHandleListener l){
         mListener.remove(l);
+    }
+
+    public static MyApplication getApp(){
+        return mApp;
     }
 }

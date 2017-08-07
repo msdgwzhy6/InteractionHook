@@ -1,5 +1,6 @@
 package com.rexy.example;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -12,7 +13,7 @@ import com.rexy.example.extend.BaseActivity;
  * @author: rexy
  * @date: 2016-11-03 15:38
  */
-public class ActivityLauncher extends BaseActivity {
+public class ActivityLauncher extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

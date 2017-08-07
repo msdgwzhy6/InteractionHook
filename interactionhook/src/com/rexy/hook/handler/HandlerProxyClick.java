@@ -7,8 +7,8 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 
 import com.rexy.hook.InteractionHook;
-import com.rexy.hook.record.TouchRecord;
 import com.rexy.hook.interfaces.IProxyClickListener;
+import com.rexy.hook.record.TouchRecord;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -42,13 +42,18 @@ public class HandlerProxyClick extends HookHandler {
     private float mDownY;
 
     /**
+     * touch down timestamp
+     */
+    private long mDownTime;
+
+    /**
      * a proxy click listener that can be rewritten the base onClickListener.do you business here .
      * return true to intercept the original clickListener.
      */
     IProxyClickListener mInnerClickProxy = new IProxyClickListener() {
         @Override
         public boolean onProxyClick(WrapClickListener wrap, View v) {
-            return reportResult(new ResultProxyClick(v,mDownX,mDownY));
+            return reportResult(new ResultProxyClick(v, getTag(), mDownX, mDownY,mDownTime));
         }
     };
 
@@ -56,17 +61,17 @@ public class HandlerProxyClick extends HookHandler {
 
     public HandlerProxyClick(String tag) {
         super(tag);
+        mPrivateTagKey=mPrivateTagKey|((0xFFFF)<<24);
     }
 
     /**
-     * install proxy click listener in a recursive fuction
+     * install proxy click listener in a recursive function
      *
      * @param view                  root view .
      * @param recycledContainerDeep view hierarchy level
      */
     private void hookViews(View view, int recycledContainerDeep) {
         if (view.getVisibility() == View.VISIBLE) {
-            //大于0 时存在祖先为 Recycled 类型的 ViewGroup,为1 时是Recycled 类型 ViewGroup 的直接child;
             boolean forceHook = recycledContainerDeep == 1;
             if (view instanceof ViewGroup) {
                 boolean existAncestorRecycle = recycledContainerDeep > 0;
@@ -169,6 +174,7 @@ public class HandlerProxyClick extends HookHandler {
             TouchRecord down=caller.getTouchRecord();
             mDownX=down.getDownX();
             mDownY=down.getDownY();
+            mDownTime = down.getDownTime();
             hookViews(rootView, 0);
             return true;
         }
@@ -184,11 +190,13 @@ public class HandlerProxyClick extends HookHandler {
     public static class ResultProxyClick extends HandleResult {
         private int mClickX;
         private int mClickY;
+        private long mDownTime;
 
-        private ResultProxyClick(View target, float clickX, float clickY) {
-            super(target);
+        private ResultProxyClick(View target, String tag, float clickX, float clickY, long downTime) {
+            super(target, tag);
             mClickX = (int) clickX;
             mClickY = (int) clickY;
+            mDownTime = downTime;
         }
 
         /**
@@ -205,13 +213,27 @@ public class HandlerProxyClick extends HookHandler {
             return mClickY;
         }
 
+        /**
+         * get click touch down timestamp;
+         */
+        public long getDownTime() {
+            return mDownTime;
+        }
+
+        /**
+         * get click touch up timestamp;
+         */
+        public long getUpTime() {
+            return getTimestamp();
+        }
 
         @Override
         protected void toShortStringImpl(StringBuilder receiver) {
             receiver.append(formatView(getTargetView())).append("{");
-            receiver.append("time=").append(formatTime(getTimestamp(),null)).append(',');
             receiver.append("clickX=").append(getClickX()).append(',');
             receiver.append("clickY=").append(getClickY()).append(',');
+            receiver.append("downTime=").append(formatTime(getDownTime(),null)).append(',');
+            receiver.append("time=").append(formatTime(getTimestamp(),null)).append(',');
             receiver.setCharAt(receiver.length()-1,'}');
         }
 
@@ -219,6 +241,7 @@ public class HandlerProxyClick extends HookHandler {
         protected void dumpResultImpl(Map<String, Object> receiver) {
             receiver.put("view",getTargetView());
             receiver.put("time",getTimestamp());
+            receiver.put("downTime", getTimestamp());
             receiver.put("clickX",getClickX());
             receiver.put("clickY",getClickY());
         }

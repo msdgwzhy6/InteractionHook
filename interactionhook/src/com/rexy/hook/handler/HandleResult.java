@@ -25,22 +25,30 @@ public abstract class HandleResult implements IHandleResult {
 
     private View mTargetView;
     private long mCreateTime;
+    private String mTag;
 
 
     /**
-     * @see #HandleResult(View, long)
+     * @see #HandleResult(View, String,long)
      */
-    protected HandleResult(View target) {
-        this(target, System.currentTimeMillis());
+    protected HandleResult(View target,String tag) {
+        this(target,tag, System.currentTimeMillis());
     }
 
     /**
      * @param target the target View that the handler is observing with .
+     * @param tag hook handler tag ,used to distinguish the other handler
      * @param createTime the timestamp when this result is created
      */
-    protected HandleResult(View target, long createTime) {
+    protected HandleResult(View target, String tag, long createTime) {
         mTargetView = target;
         mCreateTime = createTime;
+        mTag=tag;
+    }
+
+    @Override
+    public String getTag(){
+        return mTag;
     }
 
     @Override
@@ -114,7 +122,7 @@ public abstract class HandleResult implements IHandleResult {
      * format timestamp {@link SimpleDateFormat}
      */
     public String formatTime(long time, String format) {
-        return new SimpleDateFormat(format == null ? "yy-M-d HH:mm:ss.SSS" : format)
+        return new SimpleDateFormat(format == null ? "mm:ss.SSS" : format)
                 .format(new java.util.Date(time));
     }
 }

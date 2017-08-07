@@ -21,7 +21,7 @@ public class HandlerGesture extends HookHandler {
     public boolean handle(InteractionHook caller) {
         TouchRecord record = caller.getTouchRecord();
         if (record.isDraggedPossible()) {
-            reportResult(new ResultGesture(record));
+            reportResult(new ResultGesture(record,getTag()));
             return true;
         }
         return false;
@@ -68,8 +68,8 @@ public class HandlerGesture extends HookHandler {
         private float mFlingY;
 
 
-        private ResultGesture(TouchRecord record) {
-            super(record.getTargetView(), record.getUpTime());
+        private ResultGesture(TouchRecord record,String tag) {
+            super(record.getTargetView(),tag, record.getUpTime());
             mDownX = record.getDownX();
             mDownY = record.getDownY();
             mDownTime = record.getDownTime();
@@ -175,14 +175,14 @@ public class HandlerGesture extends HookHandler {
         @Override
         protected void toShortStringImpl(StringBuilder receiver) {
             receiver.append(formatView(getTargetView())).append("{");
-            receiver.append("time=").append(formatTime(getTimestamp(), null)).append(',');
-            receiver.append("downTime=").append(formatTime(getDownTime(), null)).append(',');
             receiver.append("downX=").append((int) mDownX).append(',');
             receiver.append("downY=").append((int) mDownY).append(',');
             receiver.append("length=").append((int) getLength()).append(',');
             receiver.append("angle=").append((int) getAngle()).append(',');
             receiver.append("flingX=").append((int)getFlingX()).append(',');
             receiver.append("flingY=").append((int)getFlingY()).append(',');
+            receiver.append("downTime=").append(formatTime(getDownTime(), null)).append(',');
+            receiver.append("time=").append(formatTime(getTimestamp(), null)).append(',');
             receiver.setCharAt(receiver.length() - 1, '}');
         }
 

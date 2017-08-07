@@ -26,4 +26,6 @@
         <activity android:name="com.rexy.example.ActivityCommon"/>
     </application>
 
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
+
 </manifest>

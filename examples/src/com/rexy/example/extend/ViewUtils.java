@@ -2,16 +2,10 @@ package com.rexy.example.extend;
 
 import android.app.Activity;
 import android.support.v4.app.Fragment;
-import android.util.SparseArray;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
-
-import com.rexy.widgets.layout.PageScrollView;
 
 public class ViewUtils {
-
-
     public static <T extends View> T view(Activity aty, int id) {
         if (aty != null) {
             return (T) aty.findViewById(id);
@@ -33,17 +27,41 @@ public class ViewUtils {
         return null;
     }
 
-    public static TextView installIndicator(Activity activity) {
-        ViewGroup decorView = (ViewGroup) activity.getWindow().getDecorView();
-        PageScrollView scrollView=new PageScrollView(activity);
-        scrollView.setOrientation(PageScrollView.VERTICAL);
-        TextView textView=new TextView(activity);
-        textView.setBackgroundColor(0x22000000);
-        textView.setTextColor(0x77ff0000);
-        scrollView.addView(textView,-1,-2);
-        scrollView.setMaxHeight(activity.getResources().getDisplayMetrics().heightPixels/3);
-        decorView.addView(scrollView);
-        return textView;
+    /**
+     * @param child
+     * @param maxWidth unknown for 0.
+     * @param maxHeight unknown for 0.
+     * @param result accept the width and height ,clound not be null.
+     * @return int[] allow to be null.
+     * @throws
+     */
+    public static void measureView(View child, int maxWidth, int maxHeight, int[] result) {
+        ViewGroup.LayoutParams p = child.getLayoutParams();
+        if (p == null) {
+            p = new ViewGroup.LayoutParams(-2, -2);
+        }
+        int heightSpec;// = ViewGroup.getChildMeasureSpec(0, 0, p.height);
+        int widthSpec;
+        if (p.width > 0) {// exactly size
+            widthSpec = View.MeasureSpec.makeMeasureSpec(p.width, View.MeasureSpec.EXACTLY);
+        } else if (p.width == -2 || maxWidth <= 0) {// wrapcontent
+            widthSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
+        } else if (p.width == -1) {
+            widthSpec = View.MeasureSpec.makeMeasureSpec(maxWidth, View.MeasureSpec.EXACTLY);
+        } else {// fillparent
+            widthSpec = View.MeasureSpec.makeMeasureSpec(maxWidth, View.MeasureSpec.AT_MOST);
+        }
+        if (p.height > 0) {
+            heightSpec = View.MeasureSpec.makeMeasureSpec(p.height, View.MeasureSpec.EXACTLY);
+        } else if (p.height == -2 || maxHeight <= 0) {
+            heightSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
+        } else if (p.height == -1) {
+            heightSpec = View.MeasureSpec.makeMeasureSpec(maxHeight, View.MeasureSpec.EXACTLY);
+        } else {
+            heightSpec = View.MeasureSpec.makeMeasureSpec(maxHeight, View.MeasureSpec.AT_MOST);
+        }
+        child.measure(widthSpec, heightSpec);
+        result[0] = child.getMeasuredWidth();
+        result[1] = child.getMeasuredHeight();
     }
-
 }

@@ -13,6 +13,11 @@ import java.util.Map;
  */
 public interface IHandleResult {
     /**
+     * hook handler tag ,used to distinguish the other handler
+     */
+    String getTag();
+
+    /**
      * get target View for this handle result analyzed with
      */
     View getTargetView();

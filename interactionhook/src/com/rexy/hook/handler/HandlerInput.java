@@ -9,8 +9,8 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.EditText;
 
-import com.rexy.hook.record.InputRecord;
 import com.rexy.hook.InteractionHook;
+import com.rexy.hook.record.InputRecord;
 
 import java.util.Map;
 
@@ -155,7 +155,7 @@ public class HandlerInput extends HookHandler {
         }
 
         if (header != null) {
-            ResultInput result = new ResultInput(edit,header.getReferTime());
+            ResultInput result = new ResultInput(edit, getTag(), header.getReferTime());
             long lastTime = header.getReferTime();
             while (header != null) {
                 lastTime = analyzeInputResult(lastTime, header.getReferTime(), header.getKeyRecord(), result);
@@ -241,8 +241,8 @@ public class HandlerInput extends HookHandler {
         private int mValidTimeCount;
 
 
-        private ResultInput(View target,long startTime) {
-            super(target);
+        private ResultInput(View target, String tag, long startTime) {
+            super(target, tag);
             mStartTime=startTime;
         }
 
@@ -281,12 +281,12 @@ public class HandlerInput extends HookHandler {
         @Override
         protected void toShortStringImpl(StringBuilder receiver) {
             receiver.append(formatView(getTargetView())).append("{");
-            receiver.append("time=").append(formatTime(getTimestamp(), null)).append(',');
-            receiver.append("startTime=").append(formatTime(getStartTime(), null)).append(',');
             receiver.append("text=").append(getText()).append(',');
             receiver.append("input=").append(getInputCount()).append(',');
             receiver.append("delete=").append(getDeleteCount()).append(',');
             receiver.append("speed=").append((int)getInputSpeed(60 * 1000)).append(',');
+            receiver.append("startTime=").append(formatTime(getStartTime(), null)).append(',');
+            receiver.append("time=").append(formatTime(getTimestamp(), null)).append(',');
             receiver.setCharAt(receiver.length() - 1, '}');
         }
 

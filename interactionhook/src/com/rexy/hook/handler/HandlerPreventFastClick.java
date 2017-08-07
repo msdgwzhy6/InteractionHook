@@ -84,7 +84,7 @@ public class HandlerPreventFastClick extends HookHandler {
                 if (intercept) {
                     View targetView = pre.getTargetView();
                     if (intercept = clickViewAt(cur.getDownX(), cur.getDownY(), targetView)) {
-                        reportResult(new ResultPreventFastClick(targetView, cur, mClickInterval));
+                        reportResult(new ResultPreventFastClick(targetView, getTag(), cur, mClickInterval));
                     }
                 }
                 if (mDynamicAdjustInterval && interval < MAX_CLICK_INTERVAL) {
@@ -166,8 +166,8 @@ public class HandlerPreventFastClick extends HookHandler {
         private int mClickY;
         private int mClickAverageInterval;
 
-        private ResultPreventFastClick(View target, TouchRecord down, int clickInterval) {
-            super(target, down.getDownTime());
+        private ResultPreventFastClick(View target, String tag, TouchRecord down, int clickInterval) {
+            super(target, tag, down.getDownTime());
             mClickX = (int) down.getDownX();
             mClickY = (int) down.getDownY();
             mClickAverageInterval = clickInterval;
@@ -197,10 +197,10 @@ public class HandlerPreventFastClick extends HookHandler {
         @Override
         protected void toShortStringImpl(StringBuilder receiver) {
             receiver.append(formatView(getTargetView())).append("{");
-            receiver.append("time=").append(formatTime(getTimestamp(),null)).append(',');
             receiver.append("clickX=").append(getClickX()).append(',');
             receiver.append("clickY=").append(getClickY()).append(',');
             receiver.append("clickInterval=").append(getClickAverageInterval()).append(',');
+            receiver.append("time=").append(formatTime(getTimestamp(), null)).append(',');
             receiver.setCharAt(receiver.length()-1,'}');
         }
 

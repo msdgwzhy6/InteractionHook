@@ -67,7 +67,7 @@ public class HandlerFocus extends HookHandler {
         }
         if (mFocusView != focusView) {
             mFocusView = focusView;
-            reportResult(new ResultFocus(focusView == null ? oldFocusView : focusView, focusView, oldFocusView));
+            reportResult(new ResultFocus(focusView == null ? oldFocusView : focusView, getTag(), focusView, oldFocusView));
         }
     }
 
@@ -95,8 +95,8 @@ public class HandlerFocus extends HookHandler {
         private View mOldFocusView;
         private View mFocusView;
 
-        private ResultFocus(View target, View focusView, View oldFocusView) {
-            super(target);
+        private ResultFocus(View target, String tag, View focusView, View oldFocusView) {
+            super(target, tag);
             mFocusView = focusView;
             mOldFocusView = oldFocusView;
         }
@@ -110,7 +110,6 @@ public class HandlerFocus extends HookHandler {
 
         /**
          * get the previous old focus View .
-         * @return
          */
         public View getOldFocusView() {
             return mOldFocusView;
@@ -118,10 +117,24 @@ public class HandlerFocus extends HookHandler {
 
         @Override
         protected void toShortStringImpl(StringBuilder receiver) {
-            receiver.append(formatView(getTargetView())).append("{");
+            View target = getTargetView(), view;
+            if (target == null) {
+                target = getOldFocusView();
+            }
+            receiver.append(formatView(target)).append("{");
+            view = getFocusView();
+            if (view == target) {
+                receiver.append("focusView=").append("this,");
+            } else {
+                receiver.append("focusView=").append(formatView(view)).append(',');
+            }
+            view = getOldFocusView();
+            if (view == target) {
+                receiver.append("oldFocusView=").append("this,");
+            } else {
+                receiver.append("oldFocusView=").append(formatView(view)).append(',');
+            }
             receiver.append("time=").append(formatTime(getTimestamp(),null)).append(',');
-            receiver.append("focusView=").append(formatView(getFocusView())).append(',');
-            receiver.append("oldFocusView=").append(formatView(getOldFocusView())).append(',');
             receiver.setCharAt(receiver.length()-1,'}');
         }
 

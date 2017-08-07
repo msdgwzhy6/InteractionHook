@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#000000">
+
+    <LinearLayout
+        android:id="@+id/titleHeader"
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        android:background="#090"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="15dp"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:textColor="#000000" />
+
+        <ImageView
+            android:id="@+id/close"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:paddingBottom="5dp"
+            android:paddingLeft="5dp"
+            android:paddingTop="5dp"
+            android:src="@android:drawable/ic_menu_close_clear_cancel" />
+
+        <ImageView
+            android:id="@+id/icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:paddingBottom="5dp"
+            android:paddingLeft="5dp"
+            android:paddingTop="5dp"
+            android:src="@android:drawable/ic_menu_more" />
+
+        <ImageView
+            android:id="@+id/clean"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="3dp"
+            android:paddingBottom="5dp"
+            android:paddingTop="5dp"
+            android:src="@android:drawable/ic_menu_revert" />
+    </LinearLayout>
+
+    <com.rexy.widgets.layout.PageScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="35dp"
+        android:orientation="vertical"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp">
+
+        <TextView
+            android:id="@+id/message"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </com.rexy.widgets.layout.PageScrollView>
+
+
+    <com.rexy.widgets.layout.WrapLayout
+        android:id="@+id/expanded_menu"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="35dp"
+        android:background="#33FF0000">
+
+        <ToggleButton
+            android:id="@+id/toogleProxyClick"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:tag="proxy-click"
+            android:textOff="proxy-click"
+            android:textOn="proxy-click" />
+
+        <ToggleButton
+            android:id="@+id/tooglePreventClick"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:tag="prevent-click"
+            android:textOff="prevent-click"
+            android:textOn="prevent-click" />
+
+        <ToggleButton
+            android:id="@+id/toogleGesture"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:tag="gesture"
+            android:textOff="gesture"
+            android:textOn="gesture" />
+
+        <ToggleButton
+            android:id="@+id/toogleInput"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:tag="input"
+            android:textOff="input"
+            android:textOn="input" />
+
+        <ToggleButton
+            android:id="@+id/toogleFocus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:tag="focus"
+            android:textOff="focus"
+            android:textOn="focus" />
+
+        <ToggleButton
+            android:id="@+id/toogleError"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:tag="error"
+            android:textOff="error"
+            android:textOn="error" />
+    </com.rexy.widgets.layout.WrapLayout>
+
+</FrameLayout>
