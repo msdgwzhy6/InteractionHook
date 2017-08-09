@@ -48,18 +48,15 @@ public class BaseActivity extends FragmentActivity implements IHandleListener {
                 Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
                         Uri.parse("package:" + getPackageName()));
                 startActivityForResult(intent, 1000);
+            } else {
+                try {
+                    mInteractionViewHolder.show();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Toast.makeText(this, "require SYSTEM_ALERT_WINDOW permission", Toast.LENGTH_SHORT).show();
+                }
             }
-            Toast.makeText(this, "require SYSTEM_ALERT_WINDOW permission", Toast.LENGTH_SHORT).show();
         }
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if (mInteractionHook != null) {
-            mInteractionHook.destroy();
-        }
-        ((MyApplication) getApplication()).unregisterHandleListener(this);
     }
 
     @Override
@@ -88,5 +85,27 @@ public class BaseActivity extends FragmentActivity implements IHandleListener {
     public boolean onReceiveHandleResult(IHookHandler handler, IHandleResult result) {
         mInteractionViewHolder.recordResult(result);
         return false;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        InteractionHook.onResume(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        InteractionHook.onPause(this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mInteractionHook != null) {
+            mInteractionHook.destroy();
+        }
+        ((MyApplication) getApplication()).unregisterHandleListener(this);
+        InteractionHook.onDestroy(this);
     }
 }

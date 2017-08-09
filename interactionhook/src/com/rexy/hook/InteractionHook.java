@@ -1,9 +1,7 @@
 package com.rexy.hook;
 
 import android.app.Activity;
-import android.text.TextUtils;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.ViewGroup;
 
@@ -15,6 +13,7 @@ import com.rexy.hook.handler.HandlerProxyClick;
 import com.rexy.hook.interfaces.IHandleListener;
 import com.rexy.hook.interfaces.IHandleResult;
 import com.rexy.hook.interfaces.IHookHandler;
+import com.rexy.hook.record.PageTracker;
 import com.rexy.hook.record.TouchRecord;
 import com.rexy.hook.record.TouchTracker;
 
@@ -66,6 +65,7 @@ import com.rexy.hook.record.TouchTracker;
  */
 public class InteractionHook implements IHandleListener {
     private static IHandleListener sHandlerListener;
+
     private Activity mActivity = null;
     private TouchTracker mTouchTracker;
     private HandlerPreventFastClick mHandlerFastClick;
@@ -73,11 +73,6 @@ public class InteractionHook implements IHandleListener {
     private HandlerGesture mHandlerGesture;
     private HandlerInput mHandlerInput;
     private HandlerFocus mHandlerFocus;
-
-    /**
-     * the unique screen page name
-     */
-    private String mScreenName;
 
     /**
      * use for logger debug info
@@ -115,7 +110,6 @@ public class InteractionHook implements IHandleListener {
             setLogTag(logTag);
         }
     }
-
 
     /**
      * whether the log is allowed to output {@link #mLogTag}
@@ -191,19 +185,6 @@ public class InteractionHook implements IHandleListener {
             handler.init(this, mActivity);
         }
         return handler != null && handler.supportHandle();
-    }
-
-    /**
-     * set screen name every activity or fragment should give a unique business name
-     *
-     * @param screenName should be unique char sequence
-     */
-    public void setScreenName(String screenName) {
-        if (TextUtils.equals(screenName, mScreenName)) {
-            String oldScreen = mScreenName;
-            mScreenName = screenName;
-            onScreenChanged(screenName, oldScreen);
-        }
     }
 
     /**
@@ -367,21 +348,6 @@ public class InteractionHook implements IHandleListener {
     }
 
     /**
-     * it only works well on monitor device ,so we don't suggest use this method and mark it as deprecated.
-     * dispatch the top input event to any handler ,called by the {@link Activity#dispatchKeyEvent(KeyEvent)}
-     *
-     * @return true will intercept the input device to dispatch this event in further way .
-     */
-    @Deprecated
-    public boolean onKeyEvent(KeyEvent ke) {
-        boolean handled = false;
-        if (KeyEvent.ACTION_DOWN == ke.getAction() && !ke.isSystem()) {
-            //do nothing because deprecated.
-        }
-        return handled;
-    }
-
-    /**
      * do some recycle and destroy task,
      * called in the activity lifecycle method destroy,{@link Activity#onDestroy()}
      */
@@ -414,7 +380,6 @@ public class InteractionHook implements IHandleListener {
         return handled;
     }
 
-
     /**
      * called when a handler success handled something and created a result .
      * @param handler  handler who create this result ,{@link IHookHandler},{@link IHookHandler}.
@@ -430,17 +395,67 @@ public class InteractionHook implements IHandleListener {
         return handled;
     }
 
-    protected void onScreenChanged(String screenName, String oldScreenName) {
-        if (isLogAccess()) {
-            print("screen", String.format("screen changed from %d to %d", oldScreenName, screenName));
-        }
-    }
-
     /**
      * set a global hook handle listener
      * @param l {@link IHandleListener}
      */
     public static void setGlobalHandleListener(IHandleListener l) {
         sHandlerListener = l;
+    }
+
+
+    private static PageTracker sPageTracker;
+
+    private static PageTracker getPageTracker() {
+        if (sPageTracker == null) {
+            sPageTracker = new PageTracker();
+        }
+        sPageTracker.setHandleListener(sHandlerListener);
+        return sPageTracker;
+    }
+
+    public static void onResume(Activity activity) {
+        getPageTracker().onResume(activity, null, null);
+
+    }
+
+    public static void onPause(Activity activity) {
+        getPageTracker().onPause(activity, null, null);
+    }
+
+    public static void onDestroy(Activity activity) {
+        getPageTracker().onDestroy(activity, null, null);
+    }
+
+    public static void onResume(android.support.v4.app.Fragment fragment) {
+        getPageTracker().onResume(fragment.getActivity(), fragment, fragment.getParentFragment());
+    }
+
+    public static void onPause(android.support.v4.app.Fragment fragment) {
+        getPageTracker().onPause(fragment.getActivity(), fragment, fragment.getParentFragment());
+    }
+
+    public static void onHiddenChanged(android.support.v4.app.Fragment fragment, boolean hidden) {
+        getPageTracker().onHiddenChanged(fragment.getActivity(), fragment, fragment.getParentFragment(), hidden);
+    }
+
+    public static void onDestroy(android.support.v4.app.Fragment fragment) {
+        getPageTracker().onDestroy(fragment.getActivity(), fragment, fragment.getParentFragment());
+    }
+
+    public static void onResume(android.app.Fragment fragment) {
+        getPageTracker().onResume(fragment.getActivity(), fragment, fragment.getParentFragment());
+    }
+
+    public static void onPause(android.app.Fragment fragment) {
+        getPageTracker().onPause(fragment.getActivity(), fragment, fragment.getParentFragment());
+    }
+
+    public static void onHiddenChanged(android.app.Fragment fragment, boolean hidden) {
+        getPageTracker().onHiddenChanged(fragment.getActivity(), fragment, fragment.getParentFragment(), hidden);
+    }
+
+    public static void onDestroy(android.app.Fragment fragment) {
+        getPageTracker().onDestroy(fragment.getActivity(), fragment, fragment.getParentFragment());
     }
 }
